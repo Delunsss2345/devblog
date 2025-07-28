@@ -10,10 +10,10 @@ export const RegisterSchema = z
     password: z.string().min(6, { message: "Mật khẩu tối thiếu 6 ký tự" }),
     confirmPassword: z.string(),
   })
-  .refine(
+  .refine( //refine dùng một hàm values gồm các giá trị trong object 
     (values) => {
       return values.password === values.confirmPassword;
     },
-    { message: "Mật khẩu xác nhận không khớp", path: ["confirmPassword"] }
+    { message: "Mật khẩu xác nhận không khớp", path: ["confirmPassword"] } //path: ["confirmPassword"]  chỉ ra lỗi ở confirmPassword
   );
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>; // infer tạo ra type giống với object mẫu
