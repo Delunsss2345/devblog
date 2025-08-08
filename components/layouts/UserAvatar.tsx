@@ -1,3 +1,4 @@
+"use client";
 import { LogOut, Pencil, Shield, User } from "lucide-react";
 import { FaRegBookmark } from "react-icons/fa";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -9,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
+import { signOut } from "next-auth/react"; // dùng để gửi http request đến server
 const UserAvatar = () => {
   return (
     <DropdownMenu>
@@ -52,7 +54,7 @@ const UserAvatar = () => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem>
-          <button className="flex items-center gap-2">
+          <button onClick={() => signOut()} className="flex items-center gap-2">
             <LogOut /> Đăng xuất
           </button>
         </DropdownMenuItem>

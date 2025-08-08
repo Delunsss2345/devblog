@@ -6,6 +6,7 @@ declare global {
 
 const db = globalThis.prisma || new PrismaClient(); //globalThis dùng ở vùng nhớ
 
+// trách việc lặp lại tạo ra new 1 instance mới
 if (process.env.NODE_ENV !== "production") {
   globalThis.prisma = db;
 }

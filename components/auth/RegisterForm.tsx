@@ -12,7 +12,7 @@ import { useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const RegisterForm = () => {
-  const [isPending, setTransition] = useTransition();
+  const [isPending, startTransition] = useTransition(); // kiếm tra kết thúc của
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
@@ -21,14 +21,14 @@ const RegisterForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterSchemaType>({
-    resolver: zodResolver(RegisterSchema),
+    resolver: zodResolver(RegisterSchema), // tự động kiểm tra
   });
 
   const onSubmit: SubmitHandler<RegisterSchemaType> = (data) => {
     setError("");
     setSuccess("");
 
-    setTransition(() => {
+    startTransition(() => {
       signUp(data).then((res) => {
         if (res.success) {
           setSuccess(res.success);
@@ -82,7 +82,7 @@ const RegisterForm = () => {
         outlined
       />
       {error && <Alert error message={error} />}
-      {success && <Alert success message={error} />}
+      {success && <Alert success message={success} />}
       <div className="flex justify-center my-2">hoặc</div>
       <div className="flex justify-center">
         <SocialAuth />

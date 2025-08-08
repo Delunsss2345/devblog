@@ -14,6 +14,8 @@ export const RegisterSchema = z
     (values) => {
       return values.password === values.confirmPassword;
     },
-    { message: "Mật khẩu xác nhận không khớp", path: ["confirmPassword"] } //path: ["confirmPassword"]  chỉ ra lỗi ở confirmPassword
+    { message: "Mật khẩu xác nhận không khớp", path: ["confirmPassword"] } 
+    //path: ["confirmPassword"]  chỉ ra lỗi ở confirmPassword
   );
-export type RegisterSchemaType = z.infer<typeof RegisterSchema>; // infer tạo ra type giống với object mẫu
+export type RegisterSchemaType = z.infer<typeof RegisterSchema>; 
+// infer tạo ra type giống với object mẫu

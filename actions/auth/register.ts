@@ -5,7 +5,12 @@ import { RegisterSchema, RegisterSchemaType } from "@/schemas/RegisterSchema";
 import bcrypt from "bcryptjs";
 
 export const signUp = async (values: RegisterSchemaType) => {
-  const validateFields = RegisterSchema.safeParse(values);
+  const validateFields = RegisterSchema.safeParse(values); // Hàm này sẽ thử parse và validate dữ liệu values theo schema.
+  // {
+  //   success: true,   // hoặc false
+  //   data: ... ,      // dữ liệu đã parse (nếu success)
+  //   error: ...       // thông tin lỗi (nếu fail)
+  // }
   if (!validateFields.success) {
     return { error: "Không có field" };
   }
