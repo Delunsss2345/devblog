@@ -1,11 +1,15 @@
 import bcrypt from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import GitHub from "next-auth/providers/github";
 import { getUserByEmail } from "./lib/user";
 import { LoginSchema } from "./schemas/LoginSchema";
-
 export default {
   providers: [
+    GitHub({
+      clientId: process.env.CLIENT_GITHUB_ID,
+      clientSecret: process.env.CLIENT_SECRET_GITHUB,
+    }),
     Credentials({
       async authorize(credentials) {
         const validateFields = LoginSchema.safeParse(credentials);
@@ -23,7 +27,7 @@ export default {
           if (isPassword) return user;
         }
 
-        return null ; 
+        return null;
       },
     }),
   ],

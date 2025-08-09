@@ -19,6 +19,7 @@ export default middleware((req) => {
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
   if (isApiAuthRoute) {
+    return;
   }
 
   if (isAuthRoute) {
@@ -32,7 +33,7 @@ export default middleware((req) => {
   if (!isLoggedIn && !isPublicRoute) {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
-  return ; 
+  return;
 });
 
 // nextjs tự tìm và đọc không cần import (đọc ở middleware.ts)

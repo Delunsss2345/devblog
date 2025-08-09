@@ -1,6 +1,8 @@
+import { auth } from "@/auth";
 import NavBar from "@/components/layouts/NavBar";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -17,29 +19,32 @@ export const metadata: Metadata = {
   description: "You favorite dev blogs",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "antialiased flex flex-col min-h-screen",
-          poppins.variable
-        )}
-      >
-        <ThemeProvider
-          attribute={"class"} //Thêm class tương đương với .classList.add('dark')
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    <SessionProvider session={session}>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={cn(
+            "antialiased flex flex-col min-h-screen",
+            poppins.variable
+          )}
         >
-          <NavBar />
-          <main className="flex-grow">{children}</main>
-        </ThemeProvider>
-      </body>
-    </html>
+          <ThemeProvider
+            attribute={"class"} //Thêm class tương đương với .classList.add('dark')
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NavBar />
+            <main className="flex-grow">{children}</main>
+          </ThemeProvider>
+        </body>
+      </html>
+    </SessionProvider>
   );
 }

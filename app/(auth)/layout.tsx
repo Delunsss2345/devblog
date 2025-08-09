@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 const AuthLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <div>
-      <nav>Auth nav</nav>
       {children}
     </div>
   );

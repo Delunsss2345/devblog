@@ -4,14 +4,17 @@ import SocialAuth from "@/components/auth/SocialAuth";
 import Button from "@/components/common/Button";
 import FormField from "@/components/common/FormField";
 import Heading from "@/components/common/Heading";
+import { LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema, LoginSchemaType } from "@/schemas/LoginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Alert from "../common/Alert";
 const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
+  const router = useRouter(); // điểu khiên router hiện tại
   const {
     register,
     handleSubmit,
@@ -24,6 +27,9 @@ const LoginForm = () => {
       login(data).then((res) => {
         if (res?.error) {
           setError(res.error);
+        }
+        if (!res?.error) {
+          router.push(LOGIN_REDIRECT); //	Chuyển sang một URL mới (client-side navigation).
         }
       });
     });
