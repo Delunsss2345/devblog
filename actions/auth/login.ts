@@ -1,5 +1,9 @@
 "use server";
 import { signIn } from "@/auth";
+import {
+  generateEmailVerificationToken,
+  sendEmailVerification,
+} from "@/lib/emailVerification";
 import { getUserByEmail } from "@/lib/user";
 import { LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema, LoginSchemaType } from "@/schemas/LoginSchema";
@@ -18,9 +22,21 @@ export const login = async (values: LoginSchemaType) => {
   if (!user || !email || !password || !user.password)
     return { error: "Tài khoản không tồn tại" };
 
-  // if (!user.emailVerified) {
-  //   return { error: "Email chưa xác minh" };
-  // }
+  if (!user.emailVerified) {
+    // Nếu email chưa được xác minh, trả về lỗi
+    const emailVerificationToken = await generateEmailVerificationToken(email);
+    if (!emailVerificationToken) {
+      return { error: "Không thể xác thực email" };
+    }
+    const { error } = await sendEmailVerification(
+      emailVerificationToken.email,
+      emailVerificationToken.token
+    );
+    if (error) {
+      return { error: "Email chưa xác minh" };
+    }
+    return { success: "Đã gửi email xác minh" };
+  }
 
   try {
     await signIn("credentials", {

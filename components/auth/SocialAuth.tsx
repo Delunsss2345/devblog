@@ -6,7 +6,7 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 const SocialAuth = () => {
   const handleOnclick = (provider: "google" | "github") => {
     signIn(provider, {
-      redirectTo: LOGIN_REDIRECT,
+      redirectTo: LOGIN_REDIRECT, // Đăng nhập thành công sẽ chuyển hướng tới
     });
   };
 
@@ -23,6 +23,7 @@ const SocialAuth = () => {
         type="button"
         label="Tiếp tục với Google"
         outlined
+        onClick={() => handleOnclick("google")}
         icon={FaGoogle}
       />
     </div>
