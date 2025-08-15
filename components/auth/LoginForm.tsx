@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Alert from "../common/Alert";
+import Link from "next/link";
 const LoginForm = () => {
   const searchParams = useSearchParams(); // Lấy các tham số truy vấn từ URL
   const [isPending, startTransition] = useTransition();
@@ -41,11 +42,8 @@ const LoginForm = () => {
         }
 
         if (res?.success) {
+          console.log("Đăng nhập thành công");
           router.push(LOGIN_REDIRECT); // Chuyển hướng về trang chủ nếu đăng nhập thành công
-        }
-
-        if (res?.success) {
-          setSuccess(res.success);
         }
       });
     });
@@ -79,6 +77,7 @@ const LoginForm = () => {
       {error && <Alert error message={error} />}
       {success && <Alert success message={success} />}
       {urlError && <Alert error message={urlError} />}
+      <p className="flex justify-center"><Link href="/forgot-password">Bạn đã quên mật khẩu?</Link></p>
       <div className="flex justify-center my-2">hoặc</div>
       <div className="flex justify-center">
         <SocialAuth />

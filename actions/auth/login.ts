@@ -5,7 +5,6 @@ import {
   sendEmailVerification,
 } from "@/lib/emailVerification";
 import { getUserByEmail } from "@/lib/user";
-import { LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema, LoginSchemaType } from "@/schemas/LoginSchema";
 import { AuthError } from "next-auth";
 
@@ -15,12 +14,12 @@ export const login = async (values: LoginSchemaType) => {
   if (!validateFields.success) {
     return { error: "Tài khoản hoặc mật khẩu sai" };
   }
-
   const { email, password } = validateFields.data;
 
   const user = await getUserByEmail(email);
-  if (!user || !email || !password || !user.password)
+  if (!user || !email || !password || !user.password) {
     return { error: "Tài khoản không tồn tại" };
+  }
 
   if (!user.emailVerified) {
     // Nếu email chưa được xác minh, trả về lỗi
@@ -42,8 +41,10 @@ export const login = async (values: LoginSchemaType) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: LOGIN_REDIRECT,
+      redirect: false,
     });
+
+    return { success: true };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

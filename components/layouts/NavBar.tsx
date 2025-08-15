@@ -13,14 +13,13 @@ import UserAvatar from "./UserAvatar";
 const NavBar = () => {
   const session = useSession(); // lấy session (refresh khi có cookie session thay đổi)
   const isLoggedIn = session.status === "authenticated";
-  console.log(isLoggedIn);
   const path = usePathname(); // lấy path bao gồm sau tên miền chính không gồm query (/products/details)
   // client-side reactive hook là useState, useEffect, usePathname, useSession
   // ví dụ usePathname lắng nghe url , nếu url đổi nó sẽ re-render lại components (get path mới)
   useEffect(() => {
     if (isLoggedIn && path) {
       const updateSession = async () => {
-        await session.update();
+        await session.update(); // nếu thay đổi thì update session mới nhất
       };
 
       updateSession();
