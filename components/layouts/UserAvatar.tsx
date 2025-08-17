@@ -1,7 +1,7 @@
 "use client";
 import { LogOut, Pencil, Shield, User } from "lucide-react";
 import { FaRegBookmark } from "react-icons/fa";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,13 +10,17 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-import { signOut } from "next-auth/react"; // dùng để gửi http request đến server
+import { signOut, useSession } from "next-auth/react"; // dùng để gửi http request đến server
 const UserAvatar = () => {
+  const session = useSession(); // lấy session (refresh khi có cookie session thay đổi)
+  const imageUrl = session.data?.user?.image; // lấy ảnh từ session
+  console.log("UserAvatar", session.data?.user); // log thông tin user để kiểm tra
   return (
     <DropdownMenu>
       {/* Nút mở tắt dropdown */}
       <DropdownMenuTrigger asChild>
         <Avatar className="border dark:border-white border-slate-950">
+          <AvatarImage src={imageUrl || ""} alt="User Avatar" />
           <AvatarFallback>
             <User size={15} className="dark:text-white text-slate-950" />{" "}
           </AvatarFallback>

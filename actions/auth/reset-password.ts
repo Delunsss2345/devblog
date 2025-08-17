@@ -1,6 +1,9 @@
 "use server";
 import db from "@/lib/db";
-import { resetPasswordVerification } from "@/lib/passwordResetToken";
+import {
+  resetPasswordVerification,
+  sendPasswordResetEmail,
+} from "@/lib/passwordResetToken";
 import { getUserByEmail } from "@/lib/user";
 
 export const resetPassword = async (token: string, password: string) => {
@@ -19,4 +22,15 @@ export const resetPassword = async (token: string, password: string) => {
   const result = await resetPasswordVerification(token, password);
   if (!result) return { error: "Thay đổi mật khẩu thất bại" };
   return { success: "Thay đổi mật khẩu thành công" };
+};
+
+export const sendResetPasswordEmail = async (email: string) => {
+  const user = await getUserByEmail(email);
+
+  if (!user || !user.email) return { error: "Người dùng không tồn tại" };
+
+  // Gửi email đặt lại mật khẩu
+  await sendPasswordResetEmail(user.email);
+
+  return { success: "Đã gửi email đặt lại mật khẩu" };
 };

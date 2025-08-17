@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { Resend } from "resend";
 import { v4 } from "uuid";
 import db from "./db";
@@ -14,7 +15,7 @@ export const getPasswordResetTokenByEmail = async (email: string) => {
     return null;
   }
 };
-
+//FIXED : Cần fix bảng passwordResetToken lưu dữ liệu vào bảng khi đăng nhập
 export const generatePasswordResetToken = async (email: string) => {
   try {
     const token = v4(); // UUID
@@ -37,8 +38,10 @@ export const generatePasswordResetToken = async (email: string) => {
       },
     });
 
+    console.log(passwordResetToken);
     return passwordResetToken;
   } catch (error) {
+    console.log(error);
     return null;
   }
 };
@@ -55,10 +58,11 @@ export const resetPasswordVerification = async (
     if (!passwordResetToken) {
       return null; // Token không hợp lệ hoặc đã hết hạn
     }
+    const hashPassword = await bcrypt.hash(password, 10);
     // Cập nhật trạng thái email đã xác thực
     await db.user.update({
       where: { email: passwordResetToken.email }, // đổi từ id sang email
-      data: { password },
+      data: { password: hashPassword },
     });
 
     // Xoá token đã sử dụng
@@ -73,18 +77,26 @@ export const resetPasswordVerification = async (
 };
 
 export const sendPasswordResetEmail = async (email: string) => {
-  const token = await generatePasswordResetToken(email);
-  console.log(token);
-  if (!token) return { error: "Không thể tạo mới mật khẩu" };
-
+  const passwordResetToken = await generatePasswordResetToken(email);
+  if (!passwordResetToken) {
+    return { error: "Không thể tạo mới mật khẩu" };
+  }
+  const token = String(passwordResetToken.token);
   const resend = new Resend(process.env.API_KEY_RESEND);
-  const passwordResetLink = `${process.env.BASE_URL}/reset-password?token=${token}`;
+  const link = `${process.env.BASE_URL}/reset-password?token=${token}`;
+
+  // Bug gửi object chứ không phải gửi link thật
   const res = await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
     subject: "Đặt lại mật khẩu",
     html: `<p>Click vào đây để đặt lại mật khẩu:</p>
-           <a href="${passwordResetLink}">Đặt lại mật khẩu</a>`,
+           <a href="${link}">Đặt lại mật khẩu</a>`,
   });
-  return { error: "Không thể gửi email đặt lại mật khẩu" };
+
+  if (res.error) {
+    return { error: "Không thể gửi email đặt lại mật khẩu" };
+  }
+
+  return { success: true };
 };

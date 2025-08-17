@@ -1,8 +1,8 @@
 "use client";
+import { sendResetPasswordEmail } from "@/actions/auth/reset-password";
 import Button from "@/components/common/Button";
 import FormField from "@/components/common/FormField";
 import Heading from "@/components/common/Heading";
-import { sendPasswordResetEmail } from "@/lib/passwordResetToken";
 import {
   PasswordEmailSchema,
   PasswordEmailSchemaType,
@@ -27,7 +27,8 @@ const PasswordEmailForm = () => {
     setError("");
     setSuccess("");
     startTransition(() => {
-      sendPasswordResetEmail(data.email).then((res) => {
+      //FIXED : fix send password chưa fix được
+      sendResetPasswordEmail(data.email).then((res) => {
         if (res.error) {
           setError(res.error);
         } else {

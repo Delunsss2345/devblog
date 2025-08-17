@@ -17,11 +17,11 @@ const NavBar = () => {
   // client-side reactive hook là useState, useEffect, usePathname, useSession
   // ví dụ usePathname lắng nghe url , nếu url đổi nó sẽ re-render lại components (get path mới)
   useEffect(() => {
-    if (isLoggedIn && path) {
+    if (!isLoggedIn && path) {
       const updateSession = async () => {
         await session.update(); // nếu thay đổi thì update session mới nhất
       };
-
+      console.log(session, path, isLoggedIn);
       updateSession();
     }
   }, [path, isLoggedIn]);
