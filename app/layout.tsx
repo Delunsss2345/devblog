@@ -1,8 +1,8 @@
-import { auth } from "@/auth";
 import NavBar from "@/components/layouts/NavBar";
+import { SessionProvider } from "@/components/providers/SessionProvider";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -24,17 +24,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
   return (
-    <SessionProvider session={session}>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={cn(
-            "antialiased flex flex-col min-h-screen",
-            poppins.variable
-          )}
-        >
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "antialiased flex flex-col min-h-screen",
+          poppins.variable
+        )}
+      >
+        <SessionProvider>
+          <EdgeStoreProvider>
           <ThemeProvider
             attribute={"class"} //Thêm class tương đương với .classList.add('dark')
             defaultTheme="system"
@@ -42,10 +41,13 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <NavBar />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow">
+              {children}
+            </main>
           </ThemeProvider>
-        </body>
-      </html>
-    </SessionProvider>
+          </EdgeStoreProvider>
+        </SessionProvider>
+      </body>
+    </html>
   );
 }

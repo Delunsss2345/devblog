@@ -19,7 +19,7 @@ export const signUp = async (values: RegisterSchemaType) => {
     return { error: "Không có field" };
   }
 
-  const { name, email, password, confirmPassword } = validateFields.data;
+  const { name, email, password } = validateFields.data;
 
   const user = await getUserByEmail(email);
   if (user) {
